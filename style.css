@@ -1,0 +1,22 @@
+.test {
+    display:flex;
+    flex-direction: row;
+}
+
+h3 {
+width:30%;
+margin:0 35%;
+}
+
+#map {
+height: 500px;
+width: 80%;
+margin:0;
+}
+
+#directionsPanel {
+height: 500px;
+width:20%;
+margin:0;
+
+}
