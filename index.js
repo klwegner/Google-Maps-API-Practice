@@ -6,8 +6,23 @@
 //   lat: 47.29779,
 //   lng: 19.0282,
 // };
+geocode();
 
 
+function geocode() {
+var location = "7316 Exemplar Dr New Port Richey FL";
+  axios.get('https://maps.googleapis.com/maps/api/geocode/json',{
+    params: {
+      address: location,
+      key: 'AIzaSyAxfMcSxjfNjScA-i1Wrx1ZsL-2uK4cIBg'
+    }
+  })
+  .then(function(res) {
+console.log(res)
+  })
+  .catch(err => console.log(err))
+  
+}
 
 
 
@@ -22,7 +37,7 @@ function initialize() {
   geocoder = new google.maps.Geocoder();
   var latlng = new google.maps.LatLng(-34.397, 150.644);
   var mapOptions = {
-    zoom: 5,
+    zoom: 2,
     center: latlng
   }
   map = new google.maps.Map(document.getElementById('map'), mapOptions);

@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Maps API Example</title>
     <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfMcSxjfNjScA-i1Wrx1ZsL-2uK4cIBg"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 
 
@@ -21,10 +23,10 @@
 
 
 <body onload="initialize()">
-  <div id="map" style="width: 320px; height: 480px;"></div>
+  <div id="map" style="width: 480px; height: 480px;"></div>
    <div>
      <input id="address" type="textbox" value="Tampa, FL">
-     <input type="button" value="Encode" onclick="codeAddress()">
+     <input type="button" value="Navigate" onclick="codeAddress()">
    </div>
 
 
@@ -32,8 +34,7 @@
 
 
 
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfMcSxjfNjScA-i1Wrx1ZsL-2uK4cIBg"></script>
-    
+  
     <!-- or is it -->
     <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfMcSxjfNjScA-i1Wrx1ZsL-2uK4cIBg"></script>  -->
 
