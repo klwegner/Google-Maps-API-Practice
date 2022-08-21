@@ -6,11 +6,26 @@
 //   lat: 47.29779,
 //   lng: 19.0282,
 // };
-geocode();
 
 
-function geocode() {
-var location = "7316 Exemplar Dr New Port Richey FL";
+//get location form
+
+let locationForm = document.getElementById('location-form');
+
+locationForm.addEventListener('submit', geocode());
+
+
+// geocode();
+
+
+function geocode(e) {
+
+  //prevent real submit
+  
+  // e.preventDefault();
+  
+  var location = document.getElementById('location-input').value;
+  console.log(location);
   axios.get('https://maps.googleapis.com/maps/api/geocode/json',{
     params: {
       address: location,
@@ -19,7 +34,46 @@ var location = "7316 Exemplar Dr New Port Richey FL";
   })
   .then(function(res) {
 console.log(res)
-  })
+
+let formattedAddress = res.data.results[0].formatted_address;
+let formattedAddressOutput = `
+<ul class="list-group">
+<li class="list-group-item">${formattedAddress}</li>
+</ul>
+`;
+
+//address components
+
+let addressComponents = res.data.results[0].address_components;
+
+let addressComponentsOutput ='<ul class="list-group">';
+for(let i = 0; i < addressComponents.length; i++) {
+  addressComponentsOutput += `
+  <li class="list-group-item"><strong>${addressComponents[i].types[0]}</strong>: ${addressComponents[i].long_name}</li>
+  `;
+}
+addressComponentsOutput += '</ul>'
+
+
+let lat = res.data.results[0].geometry.location.lat;
+let lng = res.data.results[0].geometry.location.lng;
+let geometryOutput = `
+<ul class="list-group">
+<li class="list-group-item"><strong>Latitude:</strong>${lat}</li>
+<li class="list-group-item"><strong>Longitude:</strong>${lng}</li>
+
+</ul>
+`;
+
+
+
+
+//output to app
+
+document.getElementById('formatted-address').innerHTML = formattedAddressOutput;
+document.getElementById('address-components').innerHTML = addressComponentsOutput;
+document.getElementById('geometry').innerHTML = geometryOutput;
+})
   .catch(err => console.log(err))
   
 }
