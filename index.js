@@ -1,3 +1,82 @@
+// Initialize and add the map
+function initMap(lat, lng) {
+  console.log("It is alive");
+
+  const inputLocation = { lat: lat, lng: lng };
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 4,
+    center: inputLocation,
+  });
+
+  const marker = new google.maps.Marker({
+    position: inputLocation,
+    map: map,
+  });
+}
+
+window.initMap = initMap;
+
+
+//get location form
+let locationForm = document.getElementById("location-form");
+
+//listen for submit
+
+locationForm.addEventListener("submit", geocode);
+
+function geocode(e) {
+  e.preventDefault();
+
+  let location = document.getElementById("location-input").value;
+  axios
+    .get("https://maps.googleapis.com/maps/api/geocode/json", {
+      params: {
+        address: location,
+        key: "AIzaSyAxfMcSxjfNjScA-i1Wrx1ZsL-2uK4cIBg",
+      },
+    })
+    .then((res) => {
+      //log full response
+      console.log(res);
+
+      //formatted address
+      let formattedAddress = res.data.results[0].formatted_address;
+      let formattedAddressOutput = `
+<ul class='list-group'>
+    <li class='list-group-item'>
+        ${formattedAddress}</li>
+        </ul>
+`;
+
+      let addressComponents = res.data.results[0].address_components;
+      let addressComponentsOutput = '<ul class="list-group">';
+      for (let i = 0; i < addressComponents.length; i++) {
+        addressComponentsOutput += `
+  <li class="list-group-item"><strong>${addressComponents[i].types[0]}</strong>: ${addressComponents[i].long_name}</li>
+  `;
+      }
+      addressComponentsOutput += "</ul>";
+
+      let lat = res.data.results[0].geometry.location.lat;
+      let lng = res.data.results[0].geometry.location.lng;
+      let geometryOutput = `
+<ul class= 'list-group'>
+    <li class= 'list-group-item'><strong>Latitude</strong>: ${lat}</li>
+    <li class= 'list-group-item'><strong>Longitude</strong>: ${lng}</li>
+    </ul>
+`;
+
+      document.getElementById("formatted-address").innerHTML =
+        formattedAddressOutput;
+      document.getElementById("address-components").innerHTML =
+        addressComponentsOutput;
+      document.getElementById("geometry").innerHTML = geometryOutput;
+
+      initMap(lat, lng);
+    })
+    .catch((err) => console.log(err));
+}
+
 // const budaCastle = {
 //   lat: 47.4961180781074,
 //   lng: 19.0395855903625,
@@ -7,122 +86,39 @@
 //   lng: 19.0282,
 // };
 
+// var geocoder;
+// var map;
+// function initMap() {
+//   const inputCityLocation = {lat: -34.397, lng: 150.644 }
+//   var latlng = new google.maps.LatLng(-34.397, 150.644);
+//   const map = new google.maps.Map(document.getElementById("map"), {
+//     zoom: 4,
+//     center: inputCityLocation,
+//   });
 
-//get location form
+//   const marker = new google.maps.Marker({
+//     position: inputCityLocation,
+//     map: map,
+//   });
 
-let locationForm = document.getElementById('location-form');
+// }
 
-locationForm.addEventListener('submit', geocode());
+// window.initMap = initMap;
 
-
-// geocode();
-
-
-function geocode(e) {
-
-  //prevent real submit
-  
-  // e.preventDefault();
-  
-  var location = document.getElementById('location-input').value;
-  console.log(location);
-  axios.get('https://maps.googleapis.com/maps/api/geocode/json',{
-    params: {
-      address: location,
-      key: 'AIzaSyAxfMcSxjfNjScA-i1Wrx1ZsL-2uK4cIBg'
-    }
-  })
-  .then(function(res) {
-console.log(res)
-
-let formattedAddress = res.data.results[0].formatted_address;
-let formattedAddressOutput = `
-<ul class="list-group">
-<li class="list-group-item">${formattedAddress}</li>
-</ul>
-`;
-
-//address components
-
-let addressComponents = res.data.results[0].address_components;
-
-let addressComponentsOutput ='<ul class="list-group">';
-for(let i = 0; i < addressComponents.length; i++) {
-  addressComponentsOutput += `
-  <li class="list-group-item"><strong>${addressComponents[i].types[0]}</strong>: ${addressComponents[i].long_name}</li>
-  `;
-}
-addressComponentsOutput += '</ul>'
-
-
-let lat = res.data.results[0].geometry.location.lat;
-let lng = res.data.results[0].geometry.location.lng;
-let geometryOutput = `
-<ul class="list-group">
-<li class="list-group-item"><strong>Latitude:</strong>${lat}</li>
-<li class="list-group-item"><strong>Longitude:</strong>${lng}</li>
-
-</ul>
-`;
-
-
-
-
-//output to app
-
-document.getElementById('formatted-address').innerHTML = formattedAddressOutput;
-document.getElementById('address-components').innerHTML = addressComponentsOutput;
-document.getElementById('geometry').innerHTML = geometryOutput;
-})
-  .catch(err => console.log(err))
-  
-}
-
-
-
-
-
-
-
-
-var geocoder;
-var map;
-function initialize() {
-  geocoder = new google.maps.Geocoder();
-  var latlng = new google.maps.LatLng(-34.397, 150.644);
-  var mapOptions = {
-    zoom: 2,
-    center: latlng
-  }
-  map = new google.maps.Map(document.getElementById('map'), mapOptions);
-}
-
-function codeAddress() {
-  var address = document.getElementById('address').value;
-  geocoder.geocode( { 'address' : address }, function(results, status) {
-if (status == 'okay') {
-  map.setCenter(results[0].geometry.location);
-  var marker = new google.maps.Marker({
-    map: map,
-    position: results[0].geometry.location
-  });
-} else {
-  alert('Geocode was not successful for the following reason: ' + status)
-}
-  })
-}
-
-
-
-
-
-
-
-
-
-
-
-
+// function codeAddress() {
+//   var address = document.getElementById('address').value;
+//   geocoder.geocode( { 'address' : address }, function(results, status) {
+// if (status == 'okay') {
+//   map.setCenter(results[0].geometry.location);
+//   var marker = new google.maps.Marker({
+//     map: map,
+//     position: results[0].geometry.location
+//   });
+// } else {
+//   alert('Geocode was not successful for the following reason: ' + status)
+// }
+//   })
+// }
 
 // const directionsService = new google.maps.DirectionsService();
 // const directionsRenderer = new google.maps.DirectionsRenderer();
@@ -133,7 +129,6 @@ if (status == 'okay') {
 //     zoom: 15,
 //     center: budaCastle,
 //   });
-
 
 //   const citadellaMarker = new google.maps.Marker({
 //     position: {
